@@ -60,8 +60,9 @@ def url_downloads(urls: Annotated[List[str],typer.Argument(help="Provide youtube
                   name:Annotated[str,typer.Option('--name','-n',help="Provide a prefix name for single YT video download")]=None):
     
     if not urls and not playlist:
-        if folder!=os.path.join(os.path.expanduser('~'),'Downloads'):
+        if (folder!=os.path.join(os.path.expanduser('~'),'Downloads')) or (resolution!=ResolutionTypes.p720) or (name is not None):
             print("ERROR: Please provide a YouTube link to download")
+        
         else:
             print('''
 Hi,
@@ -128,7 +129,7 @@ All in one place to download any youtube video
                 return
             result.append(download(urls[0].split("&t")[0],folder,resolution,fr'{name} - ' if name is not None else None))
             
-        else:    
+        elif len(urls)>1:    
             print('Please wait while downloading videos:')
                 
             with concurrent.futures.ThreadPoolExecutor(max_workers=(os.cpu_count())//2) as executor:
@@ -141,10 +142,12 @@ All in one place to download any youtube video
                             print(f"NOTE: The link is a Playlist, please use -p flag to download a playlist!")
                             continue
                         u=u.split("&t")[0]
-                        threads.append(executor.submit(download, u,folder,resolution,None))
+                        threads.append(executor.submit(download, u,folder,resolution,fr'{name} - ' if name is not None else None))
                         
                     for future in concurrent.futures.as_completed(threads):
                         result.append(future.result())
+        else:
+            return
     
     if result is not None:
         if len(result)>0:
