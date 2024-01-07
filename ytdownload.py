@@ -9,6 +9,7 @@ cli=typer.Typer()
 def download(url,folder=os.path.join(os.path.expanduser('~'),'Downloads')):
     try:
         yt_object=YouTube(url.strip('"'))
+        print(yt_object.title)
     except Exception as e:
         return 'ERROR: The link is not recognized as a Youtube Link'
         
@@ -63,8 +64,8 @@ All in one place to download any youtube video
     result=[]   
     if urls is not None:
         # print(urls)
-        
         if len(urls)==1:
+            print('Please wait while downloading the video:')    
             if "youtube" not in urls[0]:
                 print(f"ERROR: {urls[0]} is not a valid youtube link\n\tProvide a vaild url starting with 'http://www.youtube.com/'")
                 return 
@@ -74,6 +75,7 @@ All in one place to download any youtube video
             result.append(download(urls[0].split("&t")[0],folder))
             
         else:    
+            print('Please wait while downloading videos:')
             with concurrent.futures.ThreadPoolExecutor(max_workers=(os.cpu_count())//2) as executor:
                     threads=[]
                     for u in urls:
@@ -89,6 +91,10 @@ All in one place to download any youtube video
                     for future in concurrent.futures.as_completed(threads):
                         result.append(future.result())
     
-
+    if result is not None:
+        if len(result)>0:
+            for r in result:
+                print(r)
+                
 if __name__=="__main__":
     cli()
