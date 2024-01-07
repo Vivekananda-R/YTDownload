@@ -84,5 +84,5 @@ All in one place to download any youtube video
                         result.append(future.result())
     
 
-
-cli()
+if __name__=="__main__":
+    cli()
