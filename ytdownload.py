@@ -71,7 +71,7 @@ All in one place to download any youtube video
             if "list=PL" in urls[0]:
                 print(f"NOTE: The link is a Playlist, please use -p flag to download a playlist!")
                 return
-            result.append(download(urls[0],folder))
+            result.append(download(urls[0].split("&t")[0],folder))
             
         else:    
             with concurrent.futures.ThreadPoolExecutor(max_workers=(os.cpu_count())//2) as executor:
@@ -83,6 +83,7 @@ All in one place to download any youtube video
                         if "list=PL" in u:
                             print(f"NOTE: The link is a Playlist, please use -p flag to download a playlist!")
                             continue
+                        u=u.split("&t")[0]
                         threads.append(executor.submit(download, u,folder))
                         
                     for future in concurrent.futures.as_completed(threads):
