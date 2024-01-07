@@ -7,7 +7,7 @@ setup(
     install_requires=['pytube','typer',],
     entry_points='''
     [console_scripts]
-    ytdownload=ytdownload:main
+    ytdownload=ytdownload:cli
     
     '''
 )
