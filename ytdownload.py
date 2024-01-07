@@ -25,11 +25,16 @@ def download(url,folder=os.path.join(os.path.expanduser('~'),'Downloads')):
 def url_downloads(urls: Annotated[List[str],typer.Argument(help="Provide youtube video url, multiple urls separated by spaces")]=None,
                   playlist:Annotated[Optional[List[str]],typer.Option('--playlist','-p',help="Provide a playlist link for downloading whole playlist")]=None,
                   folder:Annotated[str,typer.Option('--folder','-f',help="Provide a folder path for download")]=os.path.join(os.path.expanduser('~'),'Downloads')):
-    print('''
+    if not urls and not playlist:
+        if folder!=os.path.join(os.path.expanduser('~'),'Downloads'):
+            print("ERROR: Please provide a YouTube link to download")
+        else:
+            print('''
 Hi,
 Welcome to ytdownload application!!
 All in one place to download any youtube video
 ''')
+    
     
     if not os.path.isdir(folder):
         if "." in folder:
